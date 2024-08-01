@@ -340,7 +340,7 @@ void publishData()
     RCSOFTCHECK(rcl_publish(&mag_publisher, &mag_msg, NULL));
 #endif
     RCSOFTCHECK(rcl_publish(&odom_publisher, &odom_msg, NULL));
-#if defined(BATTERY_PIN) || defined(USE_INA219)
+#if defined(BATTERY_PIN) || defined(USE_INA219) || defined(USE_INA226)
     battery_msg = getBattery();
     battery_msg.header.stamp.sec = time_stamp.tv_sec;
     battery_msg.header.stamp.nanosec = time_stamp.tv_nsec;
@@ -411,7 +411,7 @@ bool createEntities()
         TOPIC_PREFIX "imu/mag"
     ));
 #endif
-#if defined(BATTERY_PIN) || defined(USE_INA219)
+#if defined(BATTERY_PIN) || defined(USE_INA219) || defined(USE_INA226)
     // create battery pyblisher
     RCCHECK(rclc_publisher_init_default(
     &battery_publisher,

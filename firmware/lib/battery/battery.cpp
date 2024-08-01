@@ -2,36 +2,51 @@
 #include <sensor_msgs/msg/battery_state.h>
 #include "config.h"
 
+#if defined USE_INA219 || defined USE_INA226
 #ifdef USE_INA219
-#include <INA219_WE.h>
-
-#define INA219_ADDRESS 0x42
-INA219_WE ina219 = INA219_WE(INA219_ADDRESS);
+  #include <INA219_WE.h>
+  #define INA219_ADDRESS 0x42
+  INA219_WE ina = INA219_WE(INA219_ADDRESS);
+#else
+  #define INA226_WE_COMPATIBILITY_MODE_
+  #include <INA226_WE.h>
+  #define INA226_ADDRESS 0x50
+  INA226_WE ina = INA226_WE(INA226_ADDRESS);
+#endif
 
 float shuntVoltage_mV = 0.0;
 float loadVoltage_V = 0.0;
 float busVoltage_V = 0.0;
 float current_mA = 0.0;
 float power_mW = 0.0;
-bool ina219_overflow = false;
+bool ina_overflow = false;
 
 void initBattery(){
-  if(!ina219.init()){
-    Serial.println("INA219 not connected!");
+  if(!ina.init()){
+    Serial.println("ina not connected!");
+  } else {
+    Serial.println("ina2xx connected!");
   }
-  ina219.setADCMode(BIT_MODE_9);
-  ina219.setPGain(PG_320);
-  ina219.setBusRange(BRNG_16);
-  ina219.setShuntSizeInOhms(0.01); // used in INA219.
+  #ifdef USE_INA219
+  ina.setADCMode(BIT_MODE_9);
+  ina.setPGain(PG_320);
+  ina.setBusRange(BRNG_16);
+  ina.setShuntSizeInOhms(0.01); // used in ina.
+  #endif
 }
 
 void InaDataUpdate(){
-  shuntVoltage_mV = ina219.getShuntVoltage_mV();
-  busVoltage_V = ina219.getBusVoltage_V();
-  current_mA = ina219.getCurrent_mA();
-  power_mW = ina219.getBusPower();
+  shuntVoltage_mV = ina.getShuntVoltage_mV();
+  busVoltage_V = ina.getBusVoltage_V();
+  current_mA = ina.getCurrent_mA();
+  power_mW = ina.getBusPower();
   loadVoltage_V  = busVoltage_V + (shuntVoltage_mV/1000);
-  ina219_overflow = ina219.getOverflow();
+  /*Serial.print("busVoltag_V:");
+  Serial.println(busVoltage_V);
+  */
+  #ifdef USE_INA219
+    ina_overflow = ina.getOverflow();
+  #endif
 }
 #else
 void initBattery() {
@@ -59,7 +74,7 @@ sensor_msgs__msg__BatteryState getBattery()
 #ifdef BATTERY_PIN
     battery_msg_.voltage = readVoltage(BATTERY_PIN);
 #endif
-#ifdef USE_INA219
+#if defined USE_INA219 || defined USE_INA226
     // read voltage
     InaDataUpdate();
     battery_msg_.voltage = loadVoltage_V;

@@ -210,6 +210,7 @@ ROBOT ORIENTATION
 
 #define AGENT_IP { 192, 168, 1, 115 }  // eg IP of the desktop computer
 #define AGENT_PORT 8888
+#define WIFI_AP_LIST {{"IOT", "colu4316"}, {NULL}}
 // Enable WiFi with null terminated list of multiple APs SSID and password
 #define WIFI_MONITOR 2 // min. period to send wifi signal strength to syslog
 #define USE_ARDUINO_OTA
@@ -233,7 +234,7 @@ ROBOT ORIENTATION
 // #define BATTERY_TIMER 2000
 
 // battery voltage ADC pin
-#define BATTERY_PIN 1
+// #define BATTERY_PIN 1
 // 3.3V ref, 12 bits ADC, 33k + 10k voltage divider
 // #define USE_ADC_LUT
 #ifdef USE_ADC_LUT
@@ -242,7 +243,7 @@ const int16_t ADC_LUT[4096] = { /* insert adc_calibrate data here */ };
 #else
 #define BATTERY_ADJUST(v) ((v) * (3.3 / 4096 * (33 + 10) / 10))
 #endif
-// #define USE_INA219
+#define USE_INA226
 #define BATTERY_DIP 0.98  // battery voltage drop alert
 // #define BATTERY_CAP 2.0  // battery capacity Ah
 // #define BATTERY_MIN 9.0  // battery minimal voltage

@@ -10,7 +10,7 @@
 #else
   #define INA226_WE_COMPATIBILITY_MODE_
   #include <INA226_WE.h>
-  #define INA226_ADDRESS 0x50
+  #define INA226_ADDRESS 0x40
   INA226_WE ina = INA226_WE(INA226_ADDRESS);
 #endif
 
@@ -32,6 +32,8 @@ void initBattery(){
   ina.setPGain(PG_320);
   ina.setBusRange(BRNG_16);
   ina.setShuntSizeInOhms(0.01); // used in ina.
+  #else
+  ina.setResistorRange(0.002,41.0);
   #endif
 }
 
@@ -78,7 +80,7 @@ sensor_msgs__msg__BatteryState getBattery()
     // read voltage
     InaDataUpdate();
     battery_msg_.voltage = loadVoltage_V;
-    battery_msg_.current = -current_mA / 1000; // Amp, minu when discharge
+    battery_msg_.current = -current_mA / 1000 * 2.00/1.72; // Amp, minu when discharge
 #endif
     return battery_msg_;
 }

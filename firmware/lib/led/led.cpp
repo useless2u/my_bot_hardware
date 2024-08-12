@@ -35,6 +35,8 @@ int getLed(void)
 void initLed(void)
 {
 #ifdef LED_PIN
+   Serial.print("led init pin:");
+   Serial.println(LED_PIN);
     pinMode(LED_PIN, OUTPUT);
 #endif
 }

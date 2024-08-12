@@ -357,7 +357,7 @@ void publishData()
         getBatteryPercentage(&battery_msg);
         RCSOFTCHECK(rcl_publish(&battery_publisher, &battery_msg, NULL)) });
 #endif
-#ifdef ECHO_PIN
+#if defined(ECHO_PIN) || defined (VL53L0X)
     EXECUTE_EVERY_N_MS(RANGE_TIMER, {
         range_msg = getRange();
         range_msg.header.stamp.sec = time_stamp.tv_sec;
@@ -547,6 +547,8 @@ void setup()
     initBattery();
     initRange();
     initLidar(); // after wifi connected
+    while (getLidarDeviceInfo==0) { Serial.println("waiting for Lidar device info\n");delay(200); }
+    lidarStartScan();
     battery_msg = getBattery();
     prev_voltage = battery_msg.voltage;
 

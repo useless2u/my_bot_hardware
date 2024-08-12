@@ -17,5 +17,8 @@
 void poweronLidar(void);
 void poweroffLidar(void);
 void initLidar(void);
+int getLidarDeviceInfo(void);
+void lidarStartScan(void);
+void lidarStopScan(void);
 
 #endif

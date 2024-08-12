@@ -20,12 +20,15 @@ float busVoltage_V = 0.0;
 float current_mA = 0.0;
 float power_mW = 0.0;
 bool ina_overflow = false;
+bool ina_error = false;
 
-void initBattery(){
+bool initBattery(){
   if(!ina.init()){
-    Serial.println("ina not connected!");
+    Serial.println("battery init not OK!");
+    ina_error = true;
+    return false;
   } else {
-    Serial.println("ina2xx connected!");
+    Serial.println("battery init OK");
   }
   #ifdef USE_INA219
   ina.setADCMode(BIT_MODE_9);
@@ -35,23 +38,29 @@ void initBattery(){
   #else
   ina.setResistorRange(0.002,41.0);
   #endif
+  return true;
 }
 
 void InaDataUpdate(){
+  //Serial.print("ina update ");
   shuntVoltage_mV = ina.getShuntVoltage_mV();
   busVoltage_V = ina.getBusVoltage_V();
   current_mA = ina.getCurrent_mA();
   power_mW = ina.getBusPower();
   loadVoltage_V  = busVoltage_V + (shuntVoltage_mV/1000);
-  /*Serial.print("busVoltag_V:");
-  Serial.println(busVoltage_V);
-  */
+  //Serial.print("busVoltag_V:");
+  //Serial.print(busVoltage_V);
+  //Serial.print(" error:");
+  if (ina.getI2cErrorCode()!=0) {
+    Serial.print("INA i2c error:");
+    Serial.println(ina.getI2cErrorCode());
+  }
   #ifdef USE_INA219
     ina_overflow = ina.getOverflow();
   #endif
 }
 #else
-void initBattery() {
+bool initBattery() {
 #ifdef BATTERY_PIN
     analogReadResolution(12);
 #endif
@@ -78,7 +87,7 @@ sensor_msgs__msg__BatteryState getBattery()
 #endif
 #if defined USE_INA219 || defined USE_INA226
     // read voltage
-    InaDataUpdate();
+    if (!ina_error) InaDataUpdate();
     battery_msg_.voltage = loadVoltage_V;
     battery_msg_.current = -current_mA / 1000 * 2.00/1.72; // Amp, minu when discharge
 #endif

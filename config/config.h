@@ -13,7 +13,7 @@
 // limitations under the License.
 #ifndef CONFIG_H
 #define CONFIG_H
-
+#include "custom/mywifi.h"
 #ifdef USE_VATTENKAR_CONFIG
     #include "custom/vattenkar_config.h"
 #endif

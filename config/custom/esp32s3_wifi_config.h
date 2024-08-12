@@ -207,7 +207,7 @@ ROBOT ORIENTATION
   #define PWM_MIN -PWM_MAX
 #endif
 
-
+#define LED_PIN 43
 #define AGENT_IP { 192, 168, 1, 115 }  // eg IP of the desktop computer
 #define AGENT_PORT 8888
 #define WIFI_AP_LIST {{"IOT", "colu4316"}, {NULL}}
@@ -219,9 +219,14 @@ ROBOT ORIENTATION
 #define SYSLOG_PORT 514
 #define DEVICE_HOSTNAME "esp32s3_wifi"
 #define APP_NAME "hardware"
+#define VL53L0X
 #define USE_LIDAR_UDP
-#define LIDAR_RXD 2
-#define LIDAR_SERIAL 1 // uart number
+//#define LIDAR_RXD 44
+//#define LIDAR_TXD 43
+#define LIDAR_TXD 1
+#define LIDAR_RXD 3
+#define LIDAR_T_MINI
+#define LIDAR_SERIAL 2 // uart number
 #define LIDAR_BAUDRATE 230400
 #define LIDAR_SERVER { 192, 168, 1, 115 }  // eg IP of the desktop computer
 #define LIDAR_PORT 8889

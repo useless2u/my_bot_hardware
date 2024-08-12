@@ -15,7 +15,7 @@
 #ifndef ESP32S3_CONFIG_H
 #define ESP32S3_CONFIG_H
 
-#define LED_PIN LED_BUILTIN //used for debugging status
+#define LED_PIN 46 //used for debugging status
 
 //uncomment the base you're building
 #define LINO_BASE DIFFERENTIAL_DRIVE       // 2WD and Tracked robot w/ 2 motors

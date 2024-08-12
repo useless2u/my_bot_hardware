@@ -199,7 +199,7 @@ ROBOT ORIENTATION
 // #define USE_SYSLOG
 #define SYSLOG_SERVER { 192, 168, 1, 100 }  // eg IP of the desktop computer
 #define SYSLOG_PORT 514
-#define DEVICE_HOSTNAME "linorobot2"
+#define DEVICE_HOSTNAME "mybot"
 #define APP_NAME "hardware"
 // #define USE_LIDAR_UDP  // send lidar data to udp server
 #define LIDAR_RXD 4
